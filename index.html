@@ -1,0 +1,2480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#121010">
+    <meta name="description" content="Cardápio do Mega Lanches: lanches, hot dogs, combos, porções, jantinhas e bebidas. Peça direto pelo WhatsApp.">
+    <title>Mega Lanches</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>document.documentElement.classList.add('js');</script>
+
+<style>
+    /* =====================================================
+       MEGA LANCHES — Design System v3
+       Base preta quente, off-white para texto e amarelo
+       como acento estratégico (CTA, estado ativo, preços
+       de destaque). Anton = marca e títulos; Manrope = tudo
+       que é funcional.
+    ===================================================== */
+
+    :root{
+        /* Cor */
+        --bg: #121010;
+        --bg-deep: #0c0b0a;
+        --surface: #1b1817;
+        --surface-2: #262120;
+
+        --text: #f7f4f0;
+        --muted: #b3aaa1;
+        --dim: #8a8178;
+
+        --line: rgba(247, 244, 240, 0.13);
+        --line-strong: rgba(247, 244, 240, 0.30);
+
+        --accent: #f2b52c;
+        --accent-hover: #ffcf58;
+        --accent-press: #d69c17;
+        --on-accent: #1a1512;
+        --danger: #ff7a66;
+        --focus: var(--accent);
+
+        /* Layout */
+        --wrap: 1180px;
+        --gutter: 20px;
+        --nav-h: 56px;
+
+        /* Movimento */
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --fast: 0.16s;
+    }
+
+    @media (min-width: 760px){ :root{ --gutter: 40px; } }
+
+    /* Faixa clara: usada em UMA seção para dar ritmo (~15% neutro) */
+    .tone-light{
+        --bg: #f3eee6;
+        --text: #181513;
+        --muted: #625a52;
+        --line: rgba(24, 21, 19, 0.15);
+        --line-strong: rgba(24, 21, 19, 0.36);
+        --focus: #181513;
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    *{ box-sizing: border-box; }
+    [hidden]{ display: none !important; }
+
+    html{ scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body{
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body.has-floating-bar{ padding-bottom: 96px; }
+    body.modal-open{ overflow: hidden; position: fixed; width: 100%; }
+
+    .wrap{ max-width: calc(var(--wrap) + var(--gutter) * 2); margin: 0 auto; padding: 0 var(--gutter); }
+
+    h1, h2, h3, h4, p{ margin: 0; }
+    a{ color: inherit; }
+    button{ font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; padding: 0; }
+    img{ display: block; max-width: 100%; }
+
+    :focus-visible{ outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+    ::selection{ background: var(--accent); color: var(--on-accent); }
+
+    .visually-hidden{
+        position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    .icon{ width: 1em; height: 1em; display: inline-block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+
+    /* Fade-in de imagem (estado de carregamento). Sem JS, a imagem aparece normal. */
+    .js .fade{ opacity: 0; transition: opacity .7s var(--ease); }
+    .js .fade.is-loaded{ opacity: 1; }
+
+    .display{
+        font-family: 'Anton', 'Impact', sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        line-height: 0.95;
+    }
+
+    /* ---------- BOTÕES ---------- */
+
+    .btn-primary{
+        display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+        min-height: 54px; padding: 0 30px;
+        background: var(--accent); color: var(--on-accent);
+        font-weight: 800; font-size: 1rem; letter-spacing: 0.01em;
+        text-decoration: none; border-radius: 6px;
+        transition: background var(--fast) var(--ease), transform var(--fast) var(--ease);
+    }
+    .btn-primary:hover{ background: var(--accent-hover); }
+    .btn-primary:active{ transform: scale(0.98); background: var(--accent-press); }
+
+    .link-quiet{
+        display: inline-flex; align-items: center; min-height: 54px; padding: 0 4px;
+        font-weight: 700; font-size: 1rem; color: var(--text);
+        text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 7px;
+        opacity: .9; transition: opacity var(--fast);
+    }
+    .link-quiet:hover{ opacity: 1; }
+
+    /* Botão "+" — compacto, só vira amarelo quando há ação/estado */
+    .add-wrap{ position: relative; flex: 0 0 auto; }
+
+    .btn-add{
+        width: 46px; height: 46px; border-radius: 50%;
+        display: grid; place-items: center;
+        border: 1.5px solid var(--line-strong);
+        color: var(--text);
+        transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), color var(--fast) var(--ease), transform var(--fast) var(--ease);
+    }
+    .btn-add .icon{ width: 20px; height: 20px; stroke-width: 2; }
+    @media (hover: hover){
+        .btn-add:hover{ background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    }
+    .btn-add:active{ transform: scale(0.9); background: var(--accent-press); border-color: var(--accent-press); color: var(--on-accent); }
+    .btn-add.added{ background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    .btn-add.solid .icon{ width: 22px; height: 22px; stroke-width: 2.4; }
+    .btn-add.solid{ width: 50px; height: 50px; background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    @media (hover: hover){ .btn-add.solid:hover{ background: var(--accent-hover); border-color: var(--accent-hover); } }
+
+    .item-qty{
+        position: absolute; top: -6px; right: -6px;
+        min-width: 20px; height: 20px; padding: 0 5px;
+        border-radius: 10px; display: grid; place-items: center;
+        background: var(--accent); color: var(--on-accent);
+        font-size: 0.72rem; font-weight: 800; line-height: 1;
+        pointer-events: none;
+        box-shadow: 0 0 0 2px var(--bg);
+    }
+    .pick .item-qty{ box-shadow: none; background: var(--text); color: #181513; }
+
+    /* ---------- HERO ---------- */
+
+    .hero{
+        position: relative; isolation: isolate; overflow: hidden;
+        min-height: 600px;
+        min-height: max(600px, calc(100svh - var(--nav-h) - 28px));
+        display: flex; flex-direction: column; justify-content: flex-end;
+        padding: 140px 0 44px;
+        background: var(--bg);
+    }
+
+    .hero > .wrap{ width: 100%; }
+
+    .hero-media{ position: absolute; inset: 0 0 auto 0; height: 76%; z-index: -1; background: var(--surface); }
+    .hero-media img{
+        width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%;
+        animation: heroIn 1.5s var(--ease) both;
+    }
+    .hero-media::after{
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(to top, var(--bg) 0%, rgba(18,16,16,.62) 36%, rgba(18,16,16,.18) 100%);
+    }
+
+    .hero-title{
+        font-size: clamp(5rem, 27vw, 12rem);
+        line-height: 0.94;
+        margin-left: -0.02em;
+    }
+    .hero-title .line{ display: block; overflow: hidden; }
+    .hero-title .line > span{ display: block; animation: rise .95s var(--ease) both; }
+    .hero-title .line:nth-child(2) > span{ animation-delay: .09s; }
+
+    .hero-copy{ margin-top: 30px; max-width: 440px; }
+    .hero-rule{ width: 56px; height: 5px; background: var(--accent); margin-bottom: 20px; }
+    .hero-tagline{ font-size: 1.05rem; line-height: 1.6; color: rgba(247,244,240,.86); }
+    .hero-actions{ display: flex; align-items: center; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
+
+    @keyframes rise{ from{ transform: translateY(108%); } }
+    @keyframes heroIn{ from{ transform: scale(1.06); opacity: 0; } }
+
+    @media (min-width: 900px){
+        .hero{ padding: 120px 0 72px; }
+        .hero-media{ inset: 0 0 0 auto; width: 62%; height: auto; }
+        .hero-media::after{
+            background:
+                linear-gradient(to right, var(--bg) 0%, rgba(18,16,16,.74) 18%, rgba(18,16,16,.34) 38%, rgba(18,16,16,.1) 52%, rgba(18,16,16,0) 66%),
+                linear-gradient(to top, var(--bg) 0%, rgba(18,16,16,0) 26%);
+        }
+        .hero-title{ font-size: clamp(8rem, 15.5vw, 15rem); }
+        .hero-copy{ margin-top: 36px; }
+    }
+
+    /* ---------- NAVEGAÇÃO STICKY ---------- */
+
+    .quick-nav{
+        position: sticky; top: 0; z-index: 30;
+        background: var(--bg);
+        border-bottom: 1px solid var(--line);
+    }
+    .nav-in{
+        display: flex; align-items: center; gap: 4px;
+        height: var(--nav-h);
+        max-width: calc(var(--wrap) + var(--gutter) * 2);
+        margin: 0 auto; padding: 0 var(--gutter);
+    }
+
+    .nav-brand{
+        display: none;
+        font-family: 'Anton', 'Impact', sans-serif; font-size: 1.3rem; letter-spacing: .02em;
+        text-decoration: none; margin-right: 20px; white-space: nowrap;
+    }
+    @media (min-width: 900px){ .nav-brand{ display: block; } }
+
+    .quick-nav-scroll{
+        position: relative; flex: 1; min-width: 0; height: 100%;
+        display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
+        margin-left: -14px;
+        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 28px), transparent 100%);
+                mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 28px), transparent 100%);
+    }
+    .quick-nav-scroll::-webkit-scrollbar{ display: none; }
+    @media (min-width: 900px){ .quick-nav-scroll{ margin-left: 0; -webkit-mask-image: none; mask-image: none; } }
+
+    .quick-nav-scroll a{
+        flex: 0 0 auto; position: relative;
+        display: flex; align-items: center; padding: 0 14px;
+        color: var(--muted); font-weight: 700; font-size: .92rem;
+        text-decoration: none; white-space: nowrap;
+        transition: color var(--fast) var(--ease);
+    }
+    .quick-nav-scroll a::after{
+        content: ""; position: absolute; left: 14px; right: 14px; bottom: 0; height: 3px;
+        background: var(--accent);
+        transform: scaleX(0); transform-origin: left;
+        transition: transform .28s var(--ease);
+    }
+    .quick-nav-scroll a:hover{ color: var(--text); }
+    .quick-nav-scroll a.active{ color: var(--text); }
+    .quick-nav-scroll a.active::after{ transform: scaleX(1); }
+
+    .nav-cart{
+        position: relative; flex: 0 0 auto;
+        width: 46px; height: 46px; border-radius: 50%;
+        display: grid; place-items: center; font-size: 1.35rem;
+        transition: background var(--fast) var(--ease);
+    }
+    .nav-cart:hover{ background: rgba(247,244,240,.08); }
+    .nav-cart:active{ transform: scale(.94); }
+    .nav-cart-count{
+        position: absolute; top: 3px; right: 1px;
+        min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px;
+        background: var(--accent); color: var(--on-accent);
+        font-size: .7rem; font-weight: 800; display: grid; place-items: center; line-height: 1;
+    }
+
+    /* ---------- CABEÇALHOS DE SEÇÃO ---------- */
+
+    .cat-title{
+        font-family: 'Anton', 'Impact', sans-serif; font-weight: 400;
+        text-transform: uppercase; letter-spacing: .01em; line-height: .95;
+        font-size: clamp(3rem, 11vw, 5.6rem);
+    }
+    .cat-desc{ margin-top: 14px; color: var(--muted); font-size: 1rem; line-height: 1.55; max-width: 42ch; }
+
+    .menu-section{ scroll-margin-top: var(--nav-h); padding-bottom: 88px; }
+
+    .cat-head{
+        --shade-bottom: #121010;
+        position: relative; isolation: isolate; overflow: hidden;
+        min-height: 320px;
+        display: flex; align-items: flex-end;
+        padding: 0 0 30px;
+        margin-bottom: 8px;
+        background: #121010; color: #f7f4f0;
+        --muted: #c2b9b0;
+    }
+    .cat-head.compact{ min-height: 240px; }
+
+    .cat-media{ position: absolute; inset: 0; z-index: -1; background: var(--surface); }
+    .cat-media img{ width: 100%; height: 100%; object-fit: cover; }
+    .cat-media::after{
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(to top, var(--shade-bottom) 0%, rgba(18,16,16,.62) 42%, rgba(18,16,16,.22) 100%);
+    }
+    .tone-light .cat-head{ --shade-bottom: rgba(18,16,16,.9); }
+
+    .cat-head-inner{ width: 100%; }
+    .cat-copy{ max-width: 460px; }
+
+    /* Lanches: sem foto no cabeçalho (o hero e o destaque já carregam o hambúrguer) */
+    .cat-head.no-media{ min-height: 0; padding: 96px 0 12px; margin-bottom: 0; }
+    .cat-head.no-media .cat-title{ font-size: clamp(3.4rem, 13vw, 7.5rem); }
+
+    @media (min-width: 900px){
+        .cat-head{ min-height: 400px; align-items: center; padding: 0; }
+        .cat-head.compact{ min-height: 300px; }
+        .cat-media{ left: auto; width: 64%; }
+        .cat-media::after{
+            background:
+                linear-gradient(to right, #121010 0%, rgba(18,16,16,.7) 18%, rgba(18,16,16,.32) 38%, rgba(18,16,16,.1) 54%, rgba(18,16,16,0) 70%),
+                linear-gradient(to top, var(--shade-bottom) 0%, rgba(18,16,16,0) 24%);
+        }
+        .cat-head.side-left .cat-media{ left: 0; right: auto; }
+        .cat-head.side-left .cat-media::after{
+            background:
+                linear-gradient(to left, #121010 0%, rgba(18,16,16,.7) 18%, rgba(18,16,16,.32) 38%, rgba(18,16,16,.1) 54%, rgba(18,16,16,0) 70%),
+                linear-gradient(to top, var(--shade-bottom) 0%, rgba(18,16,16,0) 24%);
+        }
+        .cat-head.side-left .cat-copy{ margin-left: auto; }
+        .cat-title{ font-size: clamp(4rem, 8vw, 6.6rem); }
+    }
+
+    /* ---------- MAIS PEDIDOS ---------- */
+
+    .picks{ scroll-margin-top: var(--nav-h); padding: 72px 0 24px; }
+    .picks .cat-title{ font-size: clamp(3rem, 11vw, 5.6rem); }
+    .picks-head{ margin-bottom: 32px; }
+
+    .picks-track{
+        display: flex; gap: 12px;
+        overflow-x: auto; scroll-snap-type: x mandatory;
+        padding: 0 var(--gutter) 12px; scroll-padding: 0 var(--gutter);
+        scrollbar-width: none;
+    }
+    .picks-track::-webkit-scrollbar{ display: none; }
+
+    .pick{
+        position: relative; isolation: isolate; overflow: hidden;
+        flex: 0 0 78%; max-width: 360px; min-height: 420px;
+        display: flex; align-items: flex-end;
+        scroll-snap-align: start;
+        background: var(--surface); border-radius: 6px; color: #f7f4f0;
+    }
+    .pick-img{ position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
+    .pick::after{
+        content: ""; position: absolute; inset: 0; z-index: -1;
+        background: linear-gradient(to top, rgba(12,11,10,.94) 0%, rgba(12,11,10,.62) 42%, rgba(12,11,10,.06) 100%);
+    }
+    .pick-body{ width: 100%; padding: 22px; }
+    .pick-name{ font-family: 'Anton', 'Impact', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; line-height: 1; font-size: 2rem; }
+    .pick-desc{
+        margin-top: 8px; font-size: .9rem; line-height: 1.5; color: rgba(247,244,240,.78);
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .pick-foot{ display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+    .pick-price{ color: var(--accent); font-weight: 800; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+
+    @media (min-width: 900px){
+        .picks{ padding-top: 96px; }
+        .picks-track{
+            display: grid; grid-template-columns: 1.25fr 1fr 1fr; grid-template-rows: 300px 300px; gap: 16px;
+            overflow: visible; padding: 0 var(--gutter);
+            max-width: calc(var(--wrap) + var(--gutter) * 2); margin: 0 auto;
+        }
+        .pick{ flex: none; max-width: none; min-height: 0; }
+        .pick-1{ grid-row: 1 / 3; }
+        .pick-4{ grid-column: 2 / 4; }
+        .pick-1 .pick-name{ font-size: 3.2rem; }
+        .pick-1 .pick-body{ padding: 32px; }
+        .pick-1 .pick-desc{ font-size: 1rem; max-width: 34ch; -webkit-line-clamp: 3; }
+        .pick-1 .pick-price{ font-size: 1.5rem; }
+        .pick-4 .pick-desc{ max-width: 46ch; }
+        .pick-img{ transition: transform .9s var(--ease); }
+        .pick:hover .pick-img{ transform: scale(1.035); }
+    }
+
+    /* ---------- LISTA DE PRODUTOS ---------- */
+
+    .subgroup-title{ margin: 44px 0 4px; font-weight: 800; font-size: 1.02rem; color: var(--muted); }
+    .subgroup-title:first-child{ margin-top: 32px; }
+
+    .items-list{ display: grid; grid-template-columns: 1fr; column-gap: 56px; }
+    @media (min-width: 800px){ .items-list{ grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 1000px){ #bebidas .items-list{ grid-template-columns: repeat(3, 1fr); column-gap: 44px; } }
+
+    .item-row{
+        display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 18px;
+        padding: 20px 0; border-bottom: 1px solid var(--line);
+    }
+    .item-name{ font-weight: 800; font-size: 1.05rem; line-height: 1.3; color: var(--text); }
+    .item-desc{ margin-top: 6px; color: var(--muted); font-size: .9rem; line-height: 1.5; max-width: 52ch; }
+    .item-price{ display: block; margin-top: 10px; font-weight: 800; font-size: 1rem; font-variant-numeric: tabular-nums; color: var(--text); }
+
+    .drink-row{ padding: 15px 0; }
+    .drink-row .item-price{ margin-top: 2px; color: var(--muted); font-weight: 700; }
+
+    .item-row.featured .item-name{
+        font-family: 'Anton', 'Impact', sans-serif; font-weight: 400; text-transform: uppercase;
+        font-size: 1.55rem; letter-spacing: .01em; line-height: 1.05;
+    }
+    .item-row.featured .item-price{ font-size: 1.1rem; }
+
+    /* ---------- CARRINHO (bottom sheet no mobile / drawer no desktop) ---------- */
+
+    .sheet-overlay{
+        position: fixed; inset: 0; z-index: 60;
+        background: rgba(0,0,0,.68);
+        opacity: 0; visibility: hidden;
+        transition: opacity .28s var(--ease), visibility 0s .28s;
+        touch-action: none;
+    }
+    .sheet-overlay.open{ opacity: 1; visibility: visible; transition-delay: 0s; }
+
+    .cart-sheet{
+        position: fixed; z-index: 61; left: 0; right: 0; bottom: 0;
+        max-height: 92vh; max-height: 92dvh;
+        display: flex; flex-direction: column;
+        background: var(--surface); color: var(--text);
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%); visibility: hidden;
+        transition: transform .36s var(--ease), visibility 0s .36s;
+        touch-action: pan-y; overscroll-behavior: contain;
+    }
+    .cart-sheet.open{ transform: none; visibility: visible; transition-delay: 0s; }
+    .cart-sheet:focus{ outline: none; }
+
+    @media (min-width: 900px){
+        .cart-sheet{
+            left: auto; top: 0; width: 480px; max-height: none;
+            border-radius: 0; border-left: 1px solid var(--line);
+            transform: translateX(100%);
+        }
+    }
+
+    .sheet-handle{ width: 38px; height: 4px; border-radius: 2px; background: var(--line-strong); margin: 10px auto 0; }
+    @media (min-width: 900px){ .sheet-handle{ display: none; } }
+
+    .sheet-head{ display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 18px 24px 16px; }
+    .sheet-title{ font-size: 2.1rem; line-height: 1; }
+    .sheet-count{ display: block; margin-top: 6px; color: var(--muted); font-size: .88rem; font-weight: 600; }
+    .sheet-close{
+        width: 44px; height: 44px; margin: -6px -10px 0 0; border-radius: 50%;
+        display: grid; place-items: center; color: var(--muted); font-size: 1.3rem;
+        transition: background var(--fast), color var(--fast);
+    }
+    .sheet-close:hover{ background: rgba(247,244,240,.08); color: var(--text); }
+
+    .sheet-body{ flex: 1; min-height: 0; overflow-y: auto; padding: 0 24px 24px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+    .cart-list{ list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+
+    .cart-item{
+        display: grid; grid-template-columns: 1fr auto; column-gap: 16px;
+        padding: 18px 0; border-bottom: 1px solid var(--line);
+    }
+    .ci-name{ font-weight: 800; font-size: 1rem; line-height: 1.3; }
+    .ci-details{ margin-top: 4px; color: var(--muted); font-size: .84rem; line-height: 1.45; }
+    .ci-price{ text-align: right; }
+    .ci-total{ display: block; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .ci-unit{ display: block; margin-top: 2px; color: var(--dim); font-size: .78rem; font-variant-numeric: tabular-nums; }
+    .ci-actions{ grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+
+    .qty-control{ display: inline-flex; align-items: center; gap: 4px; }
+    .btn-qty{
+        width: 40px; height: 40px; border-radius: 50%;
+        border: 1.5px solid var(--line-strong);
+        display: grid; place-items: center; font-size: 1.1rem;
+        transition: background var(--fast), border-color var(--fast), color var(--fast), transform var(--fast);
+    }
+    .btn-qty .icon{ width: 16px; height: 16px; stroke-width: 2.2; }
+    @media (hover: hover){ .btn-qty:hover{ background: var(--accent); border-color: var(--accent); color: var(--on-accent); } }
+    .btn-qty:active{ transform: scale(.9); }
+    .qty-value{ min-width: 32px; text-align: center; font-weight: 800; font-size: 1.02rem; font-variant-numeric: tabular-nums; }
+
+    .btn-remove{
+        min-height: 40px; padding: 0 4px; color: var(--muted); font-size: .84rem; font-weight: 600;
+        text-decoration: underline; text-underline-offset: 3px; transition: color var(--fast);
+    }
+    .btn-remove:hover{ color: var(--danger); }
+
+    .cart-empty{ list-style: none; padding: 40px 0 16px; text-align: center; }
+    .cart-empty-title{ font-family: 'Anton', 'Impact', sans-serif; text-transform: uppercase; font-size: 1.6rem; letter-spacing: .01em; }
+    .cart-empty-text{ margin: 8px auto 24px; color: var(--muted); max-width: 30ch; font-size: .95rem; }
+    .cart-sheet.is-empty .cart-list{ border-top: none; }
+
+    .btn{
+        display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+        min-height: 54px; padding: 0 24px; border-radius: 6px;
+        font-weight: 800; font-size: 1rem; letter-spacing: .01em;
+        transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+    }
+    .btn:active{ transform: scale(.98); }
+    .btn-ghost{ border: 1.5px solid var(--line-strong); color: var(--text); }
+    .btn-ghost:hover{ border-color: var(--text); }
+
+    /* Dados do cliente */
+    .customer-data{ margin-top: 32px; }
+    .cart-sheet.is-empty .customer-data,
+    .cart-sheet.is-empty .sheet-foot{ display: none; }
+
+    .field-label{ display: block; margin: 0 0 8px; color: var(--muted); font-size: .84rem; font-weight: 700; }
+
+    .input-order{
+        width: 100%; min-height: 52px;
+        background: var(--surface-2); color: var(--text);
+        border: 1.5px solid transparent; border-radius: 6px;
+        padding: 0 16px; font: inherit; font-size: 1rem; font-weight: 500;
+        transition: border-color var(--fast) var(--ease), background var(--fast) var(--ease);
+    }
+    .input-order::placeholder{ color: var(--dim); }
+    .input-order:focus{ outline: none; border-color: var(--accent); }
+    .input-order.invalid{ border-color: var(--danger); }
+    select.input-order{
+        appearance: none; -webkit-appearance: none; cursor: pointer;
+        background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+        background-position: calc(100% - 22px) center, calc(100% - 16px) center;
+        background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;
+        padding-right: 44px;
+    }
+
+    .field-group{ margin-bottom: 20px; }
+
+    .order-mode-tabs{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .order-mode-tab{
+        min-height: 52px; border-radius: 6px; border: 1.5px solid var(--line-strong);
+        color: var(--muted); font-weight: 700; font-size: .95rem;
+        transition: background var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease), transform var(--fast);
+    }
+    .order-mode-tab:active{ transform: scale(.98); }
+    .order-mode-tab.active{ background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 800; }
+
+    .mode-title{ font-size: 1.5rem; margin: 26px 0 14px; }
+
+    .order-mode-fields{ display: flex; flex-wrap: wrap; gap: 10px; }
+    .order-mode-fields .input-order{ flex: 1 1 100%; }
+    #numeroCliente{ flex: 0 0 104px; }
+    #bairroCliente{ flex: 1 1 0; min-width: 0; }
+
+    .pickup-info{ flex: 1 1 100%; color: var(--dim); font-size: .84rem; margin-top: -2px; }
+
+    .sheet-foot{
+        border-top: 1px solid var(--line);
+        padding: 16px 24px calc(18px + env(safe-area-inset-bottom));
+        background: var(--surface);
+    }
+    .total-row{ display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+    .total-label{ color: var(--muted); font-weight: 700; font-size: .95rem; }
+    .total-text{ font-family: 'Anton', 'Impact', sans-serif; font-weight: 400; font-size: 2rem; letter-spacing: .01em; color: var(--text); }
+
+    .cart-actions{ display: flex; flex-direction: column; gap: 6px; }
+    .btn-order{ background: var(--accent); color: var(--on-accent); width: 100%; min-height: 58px; }
+    .btn-order:hover{ background: var(--accent-hover); }
+    .btn-order:active{ background: var(--accent-press); }
+    .btn-keep-buying{ min-height: 46px; color: var(--muted); font-weight: 700; font-size: .92rem; }
+    .btn-keep-buying:hover{ color: var(--text); }
+
+    /* ---------- BARRA FLUTUANTE ---------- */
+
+    .floating-cart-bar{
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+        background: var(--accent); color: var(--on-accent);
+        transform: translateY(110%); visibility: hidden;
+        transition: transform .38s var(--ease), visibility 0s .38s;
+    }
+    .floating-cart-bar.show{ transform: none; visibility: visible; transition-delay: 0s; }
+
+    .floating-cart-info{ display: flex; flex-direction: column; line-height: 1.15; }
+    .floating-cart-count{ font-size: .8rem; font-weight: 700; opacity: .78; }
+    .floating-cart-total{ font-family: 'Anton', 'Impact', sans-serif; font-size: 1.6rem; letter-spacing: .01em; font-weight: 400; transform-origin: left center; }
+    .floating-cart-bar.bump .floating-cart-total{ animation: pop .34s var(--ease); }
+    @keyframes pop{ 40%{ transform: scale(1.1); } }
+
+    .floating-cart-btn{
+        display: inline-flex; align-items: center; gap: 10px;
+        min-height: 50px; padding: 0 22px; border-radius: 6px;
+        background: #1a1512; color: #f7f4f0; font-weight: 800; font-size: .98rem;
+        transition: background var(--fast), transform var(--fast);
+    }
+    .floating-cart-btn .icon{ font-size: 1.15rem; }
+    .floating-cart-btn:hover{ background: #000; }
+    .floating-cart-btn:active{ transform: scale(.97); }
+
+    @media (min-width: 900px){
+        .floating-cart-bar{
+            left: 50%; right: auto; bottom: 24px; width: min(540px, calc(100% - 48px));
+            padding: 12px 12px 12px 24px; border-radius: 10px;
+            transform: translate(-50%, 170%);
+            box-shadow: 0 12px 40px rgba(0,0,0,.45);
+        }
+        .floating-cart-bar.show{ transform: translate(-50%, 0); }
+    }
+
+    /* ---------- MODAL — Configurador de Hot Dog ---------- */
+
+    .modal{
+        display: none; position: fixed; inset: 0; z-index: 70;
+        background: rgba(0,0,0,.7);
+        align-items: flex-end; justify-content: center;
+        overscroll-behavior: contain; touch-action: none;
+    }
+
+    .modal-content{
+        position: relative; display: flex; flex-direction: column;
+        width: 100%; max-width: 560px; max-height: 90vh; max-height: 90dvh;
+        background: var(--surface); color: var(--text);
+        border-radius: 20px 20px 0 0;
+        padding: 12px 24px 0;
+        animation: sheetUp .34s var(--ease);
+        overscroll-behavior: contain; touch-action: pan-y;
+    }
+    .modal-content:focus{ outline: none; }
+    @keyframes sheetUp{ from{ transform: translateY(40px); opacity: .5; } to{ transform: none; opacity: 1; } }
+
+    .modal-handle{ width: 38px; height: 4px; border-radius: 2px; background: var(--line-strong); margin: 0 auto 14px; }
+
+    @media (min-width: 640px){
+        .modal{ align-items: center; }
+        .modal-content{ border-radius: 12px; max-height: 84vh; padding-top: 28px; }
+        .modal-handle{ display: none; }
+    }
+
+    .close-modal{
+        position: absolute; top: 10px; right: 12px; width: 44px; height: 44px; border-radius: 50%;
+        display: grid; place-items: center; color: var(--muted); font-size: 1.3rem;
+        transition: background var(--fast), color var(--fast);
+    }
+    .close-modal:hover{ background: rgba(247,244,240,.08); color: var(--text); }
+    @media (min-width: 640px){ .close-modal{ top: 16px; right: 18px; } }
+
+    #modalTitle{ font-family: 'Anton', 'Impact', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; line-height: 1; font-size: 2.1rem; margin: 0 48px 8px 0; }
+    .modal-rules{ color: var(--muted); font-size: .95rem; margin-bottom: 14px; }
+
+    .modal-scroll-area{ overflow-y: auto; padding-bottom: 12px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+
+    .option-group h4{ font-size: .95rem; font-weight: 800; color: var(--muted); margin: 8px 0 2px; }
+
+    .checkbox-label{
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        min-height: 58px; border-bottom: 1px solid var(--line);
+        font-size: 1rem; font-weight: 600; cursor: pointer;
+        transition: color var(--fast);
+    }
+    .checkbox-label:has(input:checked){ font-weight: 800; }
+    .opt-price{ display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: .92rem; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .checkbox-label:has(input:checked) .opt-price{ color: var(--text); }
+
+    .check-indicator{ position: relative; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex: 0 0 auto; }
+    .check-indicator input{ position: absolute; inset: -14px; width: calc(100% + 28px); height: calc(100% + 28px); opacity: 0; margin: 0; cursor: pointer; }
+    .check-box{
+        width: 26px; height: 26px; border-radius: 6px;
+        border: 1.5px solid var(--line-strong);
+        display: inline-flex; align-items: center; justify-content: center;
+        transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+    }
+    .check-indicator input:checked + .check-box{ background: var(--accent); border-color: var(--accent); transform: scale(1.05); }
+    .check-indicator input:checked + .check-box::after{
+        content: ""; width: 12px; height: 7px;
+        border-left: 2.5px solid var(--on-accent); border-bottom: 2.5px solid var(--on-accent);
+        transform: rotate(-45deg) translateY(-1px);
+    }
+    .check-indicator input:focus-visible + .check-box{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .modal-footer{
+        position: sticky; bottom: 0; background: var(--surface);
+        border-top: 1px solid var(--line);
+        padding: 14px 0 calc(16px + env(safe-area-inset-bottom));
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .modal-breakdown{ display: flex; flex-direction: column; gap: 2px; font-size: .8rem; color: var(--muted); min-width: 0; }
+    .modal-breakdown .modal-breakdown-total{ color: var(--text); font-weight: 800; font-size: 1.15rem; margin-top: 2px; white-space: nowrap; }
+
+    .btn-confirm-add{
+        flex: 0 0 auto; min-height: 54px; padding: 0 24px; border-radius: 6px;
+        background: var(--accent); color: var(--on-accent);
+        font-weight: 800; font-size: 1rem; white-space: nowrap;
+        transition: background var(--fast) var(--ease), transform var(--fast) var(--ease);
+    }
+    .btn-confirm-add:hover{ background: var(--accent-hover); }
+    .btn-confirm-add:active{ transform: scale(.97); background: var(--accent-press); }
+
+    @media (max-width: 479px){
+        .modal-footer{ flex-wrap: wrap; gap: 12px; }
+        .modal-breakdown{ flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
+        .modal-breakdown .modal-breakdown-total{ margin-top: 0; }
+        .btn-confirm-add{ flex: 1 1 100%; }
+    }
+
+    /* ---------- ONDE ESTAMOS / RODAPÉ ---------- */
+
+    .visit{ background: var(--bg-deep); border-top: 1px solid var(--line); padding: 80px 0; }
+    .visit-grid{ display: grid; gap: 40px; }
+    .visit .cat-title{ font-size: clamp(3rem, 11vw, 5rem); }
+
+    .visit-list{ margin: 32px 0 0; display: grid; gap: 22px; }
+    .visit-list dt{ color: var(--dim); font-size: .84rem; font-weight: 700; margin-bottom: 2px; }
+    .visit-list dd{ margin: 0; font-size: 1.1rem; font-weight: 700; }
+    .visit-list a{ text-decoration: none; background-image: linear-gradient(var(--accent), var(--accent)); background-size: 100% 2px; background-position: 0 100%; background-repeat: no-repeat; padding-bottom: 2px; transition: color var(--fast); }
+    .visit-list a:hover{ color: var(--accent); }
+
+    .map-frame{ background: var(--surface); }
+    .map-frame iframe{ display: block; width: 100%; height: 340px; border: 0; }
+
+    @media (min-width: 900px){
+        .visit{ padding: 112px 0; }
+        .visit-grid{ grid-template-columns: 5fr 7fr; gap: 72px; align-items: center; }
+        .map-frame iframe{ height: 460px; }
+    }
+
+    .main-footer{ background: var(--bg-deep); border-top: 1px solid var(--line); padding: 28px 0 32px; }
+    .footer-row{ display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-brand{ font-family: 'Anton', 'Impact', sans-serif; font-size: 1.3rem; letter-spacing: .02em; }
+    .footer-top{ color: var(--muted); font-weight: 700; font-size: .9rem; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+    .footer-top:hover{ color: var(--text); }
+
+    /* ---------- FEEDBACK (toast) ---------- */
+
+    .toast{
+        position: fixed; z-index: 90; left: 50%; top: calc(16px + env(safe-area-inset-top));
+        max-width: min(92vw, 420px);
+        transform: translate(-50%, -16px); opacity: 0; pointer-events: none;
+        background: #f7f4f0; color: #181513;
+        padding: 13px 20px; border-radius: 8px;
+        font-weight: 700; font-size: .92rem; text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,.4);
+        transition: opacity .25s var(--ease), transform .3s var(--ease);
+    }
+    .toast.show{ opacity: 1; transform: translate(-50%, 0); }
+
+    /* ---------- MOVIMENTO REDUZIDO ---------- */
+
+    @media (prefers-reduced-motion: reduce){
+        *, *::before, *::after{ animation: none !important; transition: none !important; }
+        html{ scroll-behavior: auto; }
+    }
+</style>
+</head>
+
+<body id="topo">
+
+    <!-- Sprite de ícones -->
+    <svg class="visually-hidden" aria-hidden="true">
+        <symbol id="icon-cart" viewBox="0 0 24 24">
+            <circle cx="9" cy="20" r="1.4"/>
+            <circle cx="18" cy="20" r="1.4"/>
+            <path d="M3 4h2l2.4 12.2a1.5 1.5 0 0 0 1.5 1.3h8.6a1.5 1.5 0 0 0 1.5-1.2L21 8H6"/>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24"><polyline points="4 12 9 17 20 6"/></symbol>
+        <symbol id="icon-plus" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+        </symbol>
+        <symbol id="icon-minus" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+        <symbol id="icon-close" viewBox="0 0 24 24">
+            <line x1="5" y1="5" x2="19" y2="19"/>
+            <line x1="19" y1="5" x2="5" y2="19"/>
+        </symbol>
+    </svg>
+
+    <header id="hero" class="hero">
+        <div class="hero-media">
+            <img src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=1200&q=75" srcset="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=800&q=75 800w, https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=1200&q=75 1200w, https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=1800&q=75 1800w" sizes="(min-width: 900px) 62vw, 100vw" alt="Hambúrguer do Mega Lanches" fetchpriority="high" decoding="async">
+        </div>
+        <div class="wrap">
+            <h1 class="display hero-title"><span class="line"><span>Mega</span></span><span class="line"><span>Lanches</span></span></h1>
+            <div class="hero-copy">
+                <div class="hero-rule" aria-hidden="true"></div>
+                <p class="hero-tagline">Lanche grande de verdade: prensado na chapa, recheado sem economia e pedido em dois toques no WhatsApp.</p>
+                <div class="hero-actions">
+                    <a href="#mais-pedidos" class="btn-primary">Fazer pedido</a>
+                    <a href="#lanches" class="link-quiet">Ver cardápio</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <nav class="quick-nav" aria-label="Categorias do cardápio">
+        <div class="nav-in">
+            <a class="nav-brand" href="#topo">MEGA LANCHES</a>
+            <div class="quick-nav-scroll">
+                <a href="#mais-pedidos">Mais pedidos</a>
+                <a href="#lanches">Lanches</a>
+                <a href="#hotdogs">Hot Dogs</a>
+                <a href="#combos">Combos</a>
+                <a href="#porcoes">Porções</a>
+                <a href="#jantinhas">Jantinhas</a>
+                <a href="#bebidas">Bebidas</a>
+            </div>
+            <button type="button" class="nav-cart" onclick="abrirCarrinho()" aria-label="Abrir meu pedido">
+                <svg class="icon"><use href="#icon-cart"/></svg>
+                <span id="navCartCount" class="nav-cart-count" hidden>0</span>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section id="mais-pedidos" class="picks">
+            <div class="wrap picks-head">
+                <h2 class="cat-title">Mais pedidos</h2>
+                <p class="cat-desc">Uma boa entrada para quem chegou agora.</p>
+            </div>
+            <div class="picks-track">
+            <article class="pick pick-1" data-produto="X Tudo">
+                <img class="pick-img fade" src="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=900&q=75" srcset="https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=900&q=75 900w, https://images.unsplash.com/photo-1561758033-d89a9ad46330?auto=format&fit=crop&w=1300&q=75 1300w" sizes="(min-width: 900px) 46vw, 78vw" alt="" loading="lazy" decoding="async">
+                <div class="pick-body">
+                    <h3 class="pick-name">X Tudo</h3>
+                    <p class="pick-desc">Pão de hambúrguer, alface, tomate, hambúrguer, filé, frango, bacon, calabresa, ovo, lombinho, milho, presunto e queijo, maionese.</p>
+                    <div class="pick-foot">
+                        <span class="pick-price">R$ 28,00</span>
+                        <div class="add-wrap">
+                            <button class="btn-add solid" onclick="adicionarAoCarrinho('X Tudo', 28.00, this)" aria-label="Adicionar X Tudo ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                            <span class="item-qty" hidden aria-hidden="true">0</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="pick" data-produto="Combo X Tudo">
+                <img class="pick-img fade" src="https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=900&q=75" srcset="https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=900&q=75 900w, https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=1300&q=75 1300w" sizes="(min-width: 900px) 40vw, 78vw" alt="" loading="lazy" decoding="async">
+                <div class="pick-body">
+                    <h3 class="pick-name">Combo X Tudo</h3>
+                    <p class="pick-desc">4 mini lanches + batata com queijo e bacon + refrigerante.</p>
+                    <div class="pick-foot">
+                        <span class="pick-price">R$ 85,00</span>
+                        <div class="add-wrap">
+                            <button class="btn-add solid" onclick="adicionarAoCarrinho('Combo X Tudo', 85.00, this)" aria-label="Adicionar Combo X Tudo ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                            <span class="item-qty" hidden aria-hidden="true">0</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="pick" data-produto="Hot Dog da Casa">
+                <img class="pick-img fade" src="https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=900&q=75" srcset="https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=900&q=75 900w, https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=1300&q=75 1300w" sizes="(min-width: 900px) 40vw, 78vw" alt="" loading="lazy" decoding="async">
+                <div class="pick-body">
+                    <h3 class="pick-name">Hot Dog da Casa</h3>
+                    <p class="pick-desc">Pão de hambúrguer, alface, tomate, 2 salsichas, milho, catupiry, bacon, presunto e queijo, hambúrguer, maionese, mostarda, ketchup.</p>
+                    <div class="pick-foot">
+                        <span class="pick-price">R$ 25,00</span>
+                        <div class="add-wrap">
+                            <button class="btn-add solid" onclick="abrirConfiguradorHotDog('Hot Dog da Casa', 25.00)" aria-label="Montar Hot Dog da Casa"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                            <span class="item-qty" hidden aria-hidden="true">0</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="pick pick-4" data-produto="Batata à Moda do Chefe">
+                <img class="pick-img fade" src="https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=900&q=75" srcset="https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=900&q=75 900w, https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=1300&q=75 1300w" sizes="(min-width: 900px) 40vw, 78vw" alt="" loading="lazy" decoding="async">
+                <div class="pick-body">
+                    <h3 class="pick-name">Batata à Moda do Chefe</h3>
+                    <p class="pick-desc">500g de batata frita, bacon, mussarela, cheddar.</p>
+                    <div class="pick-foot">
+                        <span class="pick-price">R$ 40,00</span>
+                        <div class="add-wrap">
+                            <button class="btn-add solid" onclick="adicionarAoCarrinho('Batata à Moda do Chefe', 40.00, this)" aria-label="Adicionar Batata à Moda do Chefe ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                            <span class="item-qty" hidden aria-hidden="true">0</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            </div>
+        </section>
+
+        <section id="lanches" class="menu-section">
+            <div class="cat-head no-media">
+                <div class="wrap cat-head-inner">
+                    <div class="cat-copy">
+                        <h2 class="cat-title">Lanches</h2>
+                        <p class="cat-desc">Montado na chapa, camadas generosas, sabor que preenche o pão inteiro.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap">
+                <div class="items-list">
+                <article class="item-row" data-produto="X Salada">
+                    <div>
+                        <h3 class="item-name">X Salada</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 17,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Salada', 17.00, this)" aria-label="Adicionar X Salada ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Burguer">
+                    <div>
+                        <h3 class="item-name">X Burguer</h3>
+                        <p class="item-desc">Pão de hambúrguer, hambúrguer, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 14,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Burguer', 14.00, this)" aria-label="Adicionar X Burguer ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Burguer Duplo">
+                    <div>
+                        <h3 class="item-name">X Burguer Duplo</h3>
+                        <p class="item-desc">Pão de hambúrguer, 2 hambúrgueres, 2 presuntos e queijo, maionese.</p>
+                        <span class="item-price">R$ 19,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Burguer Duplo', 19.00, this)" aria-label="Adicionar X Burguer Duplo ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Bacon">
+                    <div>
+                        <h3 class="item-name">X Bacon</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, bacon, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Bacon', 20.00, this)" aria-label="Adicionar X Bacon ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Bacon Especial">
+                    <div>
+                        <h3 class="item-name">X Bacon Especial</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, bacon, ovo, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 22,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Bacon Especial', 22.00, this)" aria-label="Adicionar X Bacon Especial ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Frango">
+                    <div>
+                        <h3 class="item-name">X Frango</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, frango, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Frango', 20.00, this)" aria-label="Adicionar X Frango ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Frango Especial">
+                    <div>
+                        <h3 class="item-name">X Frango Especial</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, frango, catupiry, milho, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 25,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Frango Especial', 25.00, this)" aria-label="Adicionar X Frango Especial ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Frango com Bacon">
+                    <div>
+                        <h3 class="item-name">X Frango com Bacon</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, frango, bacon, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 25,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Frango com Bacon', 25.00, this)" aria-label="Adicionar X Frango com Bacon ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Cheddar">
+                    <div>
+                        <h3 class="item-name">X Cheddar</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, cheddar, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Cheddar', 20.00, this)" aria-label="Adicionar X Cheddar ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Catupiry">
+                    <div>
+                        <h3 class="item-name">X Catupiry</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, catupiry, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Catupiry', 20.00, this)" aria-label="Adicionar X Catupiry ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Lombinho">
+                    <div>
+                        <h3 class="item-name">X Lombinho</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, lombinho canadense, milho, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 25,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Lombinho', 25.00, this)" aria-label="Adicionar X Lombinho ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Egg">
+                    <div>
+                        <h3 class="item-name">X Egg</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, ovo, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Egg', 20.00, this)" aria-label="Adicionar X Egg ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Costela">
+                    <div>
+                        <h3 class="item-name">X Costela</h3>
+                        <p class="item-desc">Pão de hambúrguer, costela desfiada, tomate, queijo, maionese.</p>
+                        <span class="item-price">R$ 32,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Costela', 32.00, this)" aria-label="Adicionar X Costela ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Bauru">
+                    <div>
+                        <h3 class="item-name">Bauru</h3>
+                        <p class="item-desc">Pão de hambúrguer, tomate, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 10,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Bauru', 10.00, this)" aria-label="Adicionar Bauru ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Misto Quente">
+                    <div>
+                        <h3 class="item-name">Misto Quente</h3>
+                        <p class="item-desc">Pão de hambúrguer, hambúrguer, presunto e queijo, milho, maionese.</p>
+                        <span class="item-price">R$ 17,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Misto Quente', 17.00, this)" aria-label="Adicionar Misto Quente ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Calabresa">
+                    <div>
+                        <h3 class="item-name">X Calabresa</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, calabresa, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Calabresa', 20.00, this)" aria-label="Adicionar X Calabresa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Catubresa">
+                    <div>
+                        <h3 class="item-name">X Catubresa</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, calabresa, catupiry, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 22,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Catubresa', 22.00, this)" aria-label="Adicionar X Catubresa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Churrasco">
+                    <div>
+                        <h3 class="item-name">X Churrasco</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, filé mignon, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 27,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Churrasco', 27.00, this)" aria-label="Adicionar X Churrasco ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Churrasco Especial">
+                    <div>
+                        <h3 class="item-name">Churrasco Especial</h3>
+                        <p class="item-desc">Pão de hambúrguer, tomate, hambúrguer, queijo, filé mignon, molho barbecue, cebola, maionese.</p>
+                        <span class="item-price">R$ 30,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Churrasco Especial', 30.00, this)" aria-label="Adicionar Churrasco Especial ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Tudo">
+                    <div>
+                        <h3 class="item-name">X Tudo</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, filé, frango, bacon, calabresa, ovo, lombinho, milho, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 28,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Tudo', 28.00, this)" aria-label="Adicionar X Tudo ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="X Moda da Casa">
+                    <div>
+                        <h3 class="item-name">X Moda da Casa</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, hambúrguer, filé, frango, bacon, calabresa, ovo, lombinho, milho, salsicha, batata palha, presunto e queijo, maionese.</p>
+                        <span class="item-price">R$ 30,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('X Moda da Casa', 30.00, this)" aria-label="Adicionar X Moda da Casa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="hotdogs" class="menu-section">
+            <div class="cat-head">
+            <div class="cat-media">
+                <img class="fade" src="https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=1100&q=75" srcset="https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=700&q=75 700w, https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=1100&q=75 1100w, https://images.unsplash.com/photo-1638368593249-7cadb261e8b3?auto=format&fit=crop&w=1600&q=75 1600w" sizes="(min-width: 900px) 64vw, 100vw" alt="" loading="lazy" decoding="async">
+            </div>
+                <div class="wrap cat-head-inner">
+                    <div class="cat-copy">
+                        <h2 class="cat-title">Hot Dogs</h2>
+                        <p class="cat-desc">Monte do seu jeito: escolha os adicionais que quiser antes de mandar pro carrinho.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap">
+                <div class="items-list">
+                <article class="item-row" data-produto="Hot Dog Tradicional">
+                    <div>
+                        <h3 class="item-name">Hot Dog Tradicional</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, salsicha, presunto e queijo, maionese, mostarda, ketchup.</p>
+                        <span class="item-price">R$ 15,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="abrirConfiguradorHotDog('Hot Dog Tradicional', 15.00)" aria-label="Montar Hot Dog Tradicional"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Hot Dog Duplo">
+                    <div>
+                        <h3 class="item-name">Hot Dog Duplo</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, 2 salsichas, presunto e queijo, maionese, mostarda, ketchup.</p>
+                        <span class="item-price">R$ 17,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="abrirConfiguradorHotDog('Hot Dog Duplo', 17.00)" aria-label="Montar Hot Dog Duplo"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Hot Dog Especial">
+                    <div>
+                        <h3 class="item-name">Hot Dog Especial</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, 2 salsichas, milho, catupiry, bacon, presunto e queijo, maionese, mostarda, ketchup.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="abrirConfiguradorHotDog('Hot Dog Especial', 20.00)" aria-label="Montar Hot Dog Especial"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Hot Dog da Casa">
+                    <div>
+                        <h3 class="item-name">Hot Dog da Casa</h3>
+                        <p class="item-desc">Pão de hambúrguer, alface, tomate, 2 salsichas, milho, catupiry, bacon, presunto e queijo, hambúrguer, maionese, mostarda, ketchup.</p>
+                        <span class="item-price">R$ 25,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="abrirConfiguradorHotDog('Hot Dog da Casa', 25.00)" aria-label="Montar Hot Dog da Casa"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="combos" class="menu-section tone-light">
+            <div class="cat-head side-left">
+            <div class="cat-media">
+                <img class="fade" src="https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=1100&q=75" srcset="https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=700&q=75 700w, https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=1100&q=75 1100w, https://images.unsplash.com/photo-1502998070258-dc1338445ac2?auto=format&fit=crop&w=1600&q=75 1600w" sizes="(min-width: 900px) 64vw, 100vw" alt="" loading="lazy" decoding="async">
+            </div>
+                <div class="wrap cat-head-inner">
+                    <div class="cat-copy">
+                        <h2 class="cat-title">Combos</h2>
+                        <p class="cat-desc">Todos os combos acompanham 4 mini lanches + batata com queijo e bacon (ou variação indicada).</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap">
+                <p class="subgroup-title">Mais queridos</p>
+                <div class="items-list">
+                <article class="item-row featured" data-produto="Combo Burger Tradicional">
+                    <div>
+                        <h3 class="item-name">Combo Burger Tradicional</h3>
+                        <p class="item-desc">4 mini lanches + batata com bacon e queijo.</p>
+                        <span class="item-price">R$ 50,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo Burger Tradicional', 50.00, this)" aria-label="Adicionar Combo Burger Tradicional ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row featured" data-produto="Combo X Salada Especial">
+                    <div>
+                        <h3 class="item-name">Combo X Salada Especial</h3>
+                        <p class="item-desc">4 mini lanches + batata com bacon e queijo.</p>
+                        <span class="item-price">R$ 50,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Salada Especial', 50.00, this)" aria-label="Adicionar Combo X Salada Especial ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row featured" data-produto="Combo X Tudo">
+                    <div>
+                        <h3 class="item-name">Combo X Tudo</h3>
+                        <p class="item-desc">4 mini lanches + batata com queijo e bacon + refrigerante.</p>
+                        <span class="item-price">R$ 85,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Tudo', 85.00, this)" aria-label="Adicionar Combo X Tudo ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row featured" data-produto="Combo X Moda da Casa">
+                    <div>
+                        <h3 class="item-name">Combo X Moda da Casa</h3>
+                        <p class="item-desc">4 mini lanches + batata com queijo e bacon + refrigerante.</p>
+                        <span class="item-price">R$ 105,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Moda da Casa', 105.00, this)" aria-label="Adicionar Combo X Moda da Casa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+                <p class="subgroup-title">Linha tradicional</p>
+                <div class="items-list">
+                <article class="item-row" data-produto="Combo Bauru">
+                    <div>
+                        <h3 class="item-name">Combo Bauru</h3>
+                        <span class="item-price">R$ 40,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo Bauru', 40.00, this)" aria-label="Adicionar Combo Bauru ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo Misto Quente">
+                    <div>
+                        <h3 class="item-name">Combo Misto Quente</h3>
+                        <span class="item-price">R$ 50,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo Misto Quente', 50.00, this)" aria-label="Adicionar Combo Misto Quente ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Burguer">
+                    <div>
+                        <h3 class="item-name">Combo X Burguer</h3>
+                        <span class="item-price">R$ 50,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Burguer', 50.00, this)" aria-label="Adicionar Combo X Burguer ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Salada">
+                    <div>
+                        <h3 class="item-name">Combo X Salada</h3>
+                        <span class="item-price">R$ 50,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Salada', 50.00, this)" aria-label="Adicionar Combo X Salada ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Bacon">
+                    <div>
+                        <h3 class="item-name">Combo X Bacon</h3>
+                        <span class="item-price">R$ 70,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Bacon', 70.00, this)" aria-label="Adicionar Combo X Bacon ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Calabresa">
+                    <div>
+                        <h3 class="item-name">Combo X Calabresa</h3>
+                        <span class="item-price">R$ 70,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Calabresa', 70.00, this)" aria-label="Adicionar Combo X Calabresa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Frango">
+                    <div>
+                        <h3 class="item-name">Combo X Frango</h3>
+                        <span class="item-price">R$ 70,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Frango', 70.00, this)" aria-label="Adicionar Combo X Frango ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Frango C/ Bacon">
+                    <div>
+                        <h3 class="item-name">Combo X Frango C/ Bacon</h3>
+                        <span class="item-price">R$ 75,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Frango C/ Bacon', 75.00, this)" aria-label="Adicionar Combo X Frango C/ Bacon ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Cheddar">
+                    <div>
+                        <h3 class="item-name">Combo X Cheddar</h3>
+                        <span class="item-price">R$ 60,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Cheddar', 60.00, this)" aria-label="Adicionar Combo X Cheddar ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Catupiry">
+                    <div>
+                        <h3 class="item-name">Combo X Catupiry</h3>
+                        <span class="item-price">R$ 60,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Catupiry', 60.00, this)" aria-label="Adicionar Combo X Catupiry ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo X Churrasco">
+                    <div>
+                        <h3 class="item-name">Combo X Churrasco</h3>
+                        <span class="item-price">R$ 80,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo X Churrasco', 80.00, this)" aria-label="Adicionar Combo X Churrasco ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo Hot Dog Tradicional">
+                    <div>
+                        <h3 class="item-name">Combo Hot Dog Tradicional</h3>
+                        <span class="item-price">R$ 50,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo Hot Dog Tradicional', 50.00, this)" aria-label="Adicionar Combo Hot Dog Tradicional ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo Hot Dog Duplo">
+                    <div>
+                        <h3 class="item-name">Combo Hot Dog Duplo</h3>
+                        <span class="item-price">R$ 60,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo Hot Dog Duplo', 60.00, this)" aria-label="Adicionar Combo Hot Dog Duplo ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo Hot Dog Especial">
+                    <div>
+                        <h3 class="item-name">Combo Hot Dog Especial</h3>
+                        <span class="item-price">R$ 70,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo Hot Dog Especial', 70.00, this)" aria-label="Adicionar Combo Hot Dog Especial ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Combo Hot Dog da Casa">
+                    <div>
+                        <h3 class="item-name">Combo Hot Dog da Casa</h3>
+                        <span class="item-price">R$ 80,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Combo Hot Dog da Casa', 80.00, this)" aria-label="Adicionar Combo Hot Dog da Casa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="porcoes" class="menu-section">
+            <div class="cat-head">
+            <div class="cat-media">
+                <img class="fade" src="https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=1100&q=75" srcset="https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=700&q=75 700w, https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=1100&q=75 1100w, https://images.unsplash.com/photo-1630431341636-999a7e047f3b?auto=format&fit=crop&w=1600&q=75 1600w" sizes="(min-width: 900px) 64vw, 100vw" alt="" loading="lazy" decoding="async">
+            </div>
+                <div class="wrap cat-head-inner">
+                    <div class="cat-copy">
+                        <h2 class="cat-title">Porções</h2>
+                        <p class="cat-desc">Pra dividir na mesa ou não dividir com ninguém.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap">
+                <div class="items-list">
+                <article class="item-row" data-produto="Batata Simples">
+                    <div>
+                        <h3 class="item-name">Batata Simples</h3>
+                        <p class="item-desc">400g de batata frita.</p>
+                        <span class="item-price">R$ 25,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Batata Simples', 25.00, this)" aria-label="Adicionar Batata Simples ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Batata Especial">
+                    <div>
+                        <h3 class="item-name">Batata Especial</h3>
+                        <p class="item-desc">500g de batata frita, bacon, cheddar.</p>
+                        <span class="item-price">R$ 35,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Batata Especial', 35.00, this)" aria-label="Adicionar Batata Especial ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Batata Gratinada">
+                    <div>
+                        <h3 class="item-name">Batata Gratinada</h3>
+                        <p class="item-desc">500g de batata frita, bacon, mussarela.</p>
+                        <span class="item-price">R$ 35,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Batata Gratinada', 35.00, this)" aria-label="Adicionar Batata Gratinada ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Batata à Moda do Chefe">
+                    <div>
+                        <h3 class="item-name">Batata à Moda do Chefe</h3>
+                        <p class="item-desc">500g de batata frita, bacon, mussarela, cheddar.</p>
+                        <span class="item-price">R$ 40,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Batata à Moda do Chefe', 40.00, this)" aria-label="Adicionar Batata à Moda do Chefe ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Calabresa Acebolada">
+                    <div>
+                        <h3 class="item-name">Calabresa Acebolada</h3>
+                        <p class="item-desc">400g de calabresa, alface, cebola.</p>
+                        <span class="item-price">R$ 35,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Calabresa Acebolada', 35.00, this)" aria-label="Adicionar Calabresa Acebolada ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Porção de Tilápia">
+                    <div>
+                        <h3 class="item-name">Porção de Tilápia</h3>
+                        <p class="item-desc">400g de tilápia.</p>
+                        <span class="item-price">R$ 60,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Porção de Tilápia', 60.00, this)" aria-label="Adicionar Porção de Tilápia ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Porção de Petisco de Frango">
+                    <div>
+                        <h3 class="item-name">Porção de Petisco de Frango</h3>
+                        <p class="item-desc">400g de petisco de frango frito.</p>
+                        <span class="item-price">R$ 35,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Porção de Petisco de Frango', 35.00, this)" aria-label="Adicionar Porção de Petisco de Frango ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Porção de Panceta Suína">
+                    <div>
+                        <h3 class="item-name">Porção de Panceta Suína</h3>
+                        <p class="item-desc">400g de panceta, mandioca e cebola.</p>
+                        <span class="item-price">R$ 40,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Porção de Panceta Suína', 40.00, this)" aria-label="Adicionar Porção de Panceta Suína ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="jantinhas" class="menu-section">
+            <div class="cat-head side-left">
+            <div class="cat-media">
+                <img class="fade" src="https://images.unsplash.com/photo-1432139509613-5c4255815697?auto=format&fit=crop&w=1100&q=75" srcset="https://images.unsplash.com/photo-1432139509613-5c4255815697?auto=format&fit=crop&w=700&q=75 700w, https://images.unsplash.com/photo-1432139509613-5c4255815697?auto=format&fit=crop&w=1100&q=75 1100w, https://images.unsplash.com/photo-1432139509613-5c4255815697?auto=format&fit=crop&w=1600&q=75 1600w" sizes="(min-width: 900px) 64vw, 100vw" alt="" loading="lazy" decoding="async">
+            </div>
+                <div class="wrap cat-head-inner">
+                    <div class="cat-copy">
+                        <h2 class="cat-title">Jantinhas</h2>
+                        <p class="cat-desc">Prato feito, na chapa, com arroz, feijão e batata frita.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap">
+                <div class="items-list">
+                <article class="item-row" data-produto="Picanha na Chapa">
+                    <div>
+                        <h3 class="item-name">Picanha na Chapa</h3>
+                        <p class="item-desc">Arroz, feijão, batata frita, picanha, maionese.</p>
+                        <span class="item-price">R$ 30,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Picanha na Chapa', 30.00, this)" aria-label="Adicionar Picanha na Chapa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Filé na Chapa">
+                    <div>
+                        <h3 class="item-name">Filé na Chapa</h3>
+                        <p class="item-desc">Arroz, feijão, batata frita, filé mignon, maionese.</p>
+                        <span class="item-price">R$ 25,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Filé na Chapa', 25.00, this)" aria-label="Adicionar Filé na Chapa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Frango na Chapa">
+                    <div>
+                        <h3 class="item-name">Frango na Chapa</h3>
+                        <p class="item-desc">Arroz, feijão, batata frita, frango, maionese.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Frango na Chapa', 20.00, this)" aria-label="Adicionar Frango na Chapa ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Filé de Tilápia">
+                    <div>
+                        <h3 class="item-name">Filé de Tilápia</h3>
+                        <p class="item-desc">Arroz, feijão, batata frita, filé de tilápia, salada.</p>
+                        <span class="item-price">R$ 30,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Filé de Tilápia', 30.00, this)" aria-label="Adicionar Filé de Tilápia ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Strogonoff de Carne">
+                    <div>
+                        <h3 class="item-name">Strogonoff de Carne</h3>
+                        <p class="item-desc">Arroz, strogonoff de filé mignon, batata palha.</p>
+                        <span class="item-price">R$ 25,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Strogonoff de Carne', 25.00, this)" aria-label="Adicionar Strogonoff de Carne ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row" data-produto="Strogonoff de Frango">
+                    <div>
+                        <h3 class="item-name">Strogonoff de Frango</h3>
+                        <p class="item-desc">Arroz, strogonoff de frango, batata palha.</p>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Strogonoff de Frango', 20.00, this)" aria-label="Adicionar Strogonoff de Frango ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="bebidas" class="menu-section">
+            <div class="cat-head compact">
+            <div class="cat-media">
+                <img class="fade" src="https://images.unsplash.com/photo-1527960471264-932f39eb5846?auto=format&fit=crop&w=1100&q=75" srcset="https://images.unsplash.com/photo-1527960471264-932f39eb5846?auto=format&fit=crop&w=700&q=75 700w, https://images.unsplash.com/photo-1527960471264-932f39eb5846?auto=format&fit=crop&w=1100&q=75 1100w, https://images.unsplash.com/photo-1527960471264-932f39eb5846?auto=format&fit=crop&w=1600&q=75 1600w" sizes="(min-width: 900px) 64vw, 100vw" alt="" loading="lazy" decoding="async">
+            </div>
+                <div class="wrap cat-head-inner">
+                    <div class="cat-copy">
+                        <h2 class="cat-title">Bebidas</h2>
+                        <p class="cat-desc">Refrigerante gelado, suco natural ou cerveja pra fechar o pedido.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap">
+                <p class="subgroup-title">Refrigerantes</p>
+                <div class="items-list">
+                <article class="item-row drink-row" data-produto="Coca-Cola Lata">
+                    <div>
+                        <h3 class="item-name">Coca-Cola Lata</h3>
+                        <span class="item-price">R$ 5,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Coca-Cola Lata', 5.00, this)" aria-label="Adicionar Coca-Cola Lata ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Coca-Cola Lata Zero">
+                    <div>
+                        <h3 class="item-name">Coca-Cola Lata Zero</h3>
+                        <span class="item-price">R$ 5,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Coca-Cola Lata Zero', 5.00, this)" aria-label="Adicionar Coca-Cola Lata Zero ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Fanta Uva Lata">
+                    <div>
+                        <h3 class="item-name">Fanta Uva Lata</h3>
+                        <span class="item-price">R$ 5,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Fanta Uva Lata', 5.00, this)" aria-label="Adicionar Fanta Uva Lata ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Fanta Laranja Lata">
+                    <div>
+                        <h3 class="item-name">Fanta Laranja Lata</h3>
+                        <span class="item-price">R$ 5,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Fanta Laranja Lata', 5.00, this)" aria-label="Adicionar Fanta Laranja Lata ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Sprite Lata">
+                    <div>
+                        <h3 class="item-name">Sprite Lata</h3>
+                        <span class="item-price">R$ 5,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Sprite Lata', 5.00, this)" aria-label="Adicionar Sprite Lata ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Tubaína Lata">
+                    <div>
+                        <h3 class="item-name">Tubaína Lata</h3>
+                        <span class="item-price">R$ 5,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Tubaína Lata', 5.00, this)" aria-label="Adicionar Tubaína Lata ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Tubaína 600ml">
+                    <div>
+                        <h3 class="item-name">Tubaína 600ml</h3>
+                        <span class="item-price">R$ 6,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Tubaína 600ml', 6.00, this)" aria-label="Adicionar Tubaína 600ml ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Coca-Cola 500ml">
+                    <div>
+                        <h3 class="item-name">Coca-Cola 500ml</h3>
+                        <span class="item-price">R$ 6,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Coca-Cola 500ml', 6.00, this)" aria-label="Adicionar Coca-Cola 500ml ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Fanta 500ml">
+                    <div>
+                        <h3 class="item-name">Fanta 500ml</h3>
+                        <span class="item-price">R$ 6,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Fanta 500ml', 6.00, this)" aria-label="Adicionar Fanta 500ml ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Coca-Cola 1L">
+                    <div>
+                        <h3 class="item-name">Coca-Cola 1L</h3>
+                        <span class="item-price">R$ 7,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Coca-Cola 1L', 7.00, this)" aria-label="Adicionar Coca-Cola 1L ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Fanta 1L">
+                    <div>
+                        <h3 class="item-name">Fanta 1L</h3>
+                        <span class="item-price">R$ 7,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Fanta 1L', 7.00, this)" aria-label="Adicionar Fanta 1L ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Coca-Cola 2L">
+                    <div>
+                        <h3 class="item-name">Coca-Cola 2L</h3>
+                        <span class="item-price">R$ 12,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Coca-Cola 2L', 12.00, this)" aria-label="Adicionar Coca-Cola 2L ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Fanta 2L">
+                    <div>
+                        <h3 class="item-name">Fanta 2L</h3>
+                        <span class="item-price">R$ 10,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Fanta 2L', 10.00, this)" aria-label="Adicionar Fanta 2L ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+                <p class="subgroup-title">Sucos naturais (jarra 1L)</p>
+                <div class="items-list">
+                <article class="item-row drink-row" data-produto="Suco de Laranja (Jarra 1L)">
+                    <div>
+                        <h3 class="item-name">Laranja</h3>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Suco de Laranja (Jarra 1L)', 20.00, this)" aria-label="Adicionar Suco de Laranja (Jarra 1L) ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Suco de Abacaxi (Jarra 1L)">
+                    <div>
+                        <h3 class="item-name">Abacaxi</h3>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Suco de Abacaxi (Jarra 1L)', 20.00, this)" aria-label="Adicionar Suco de Abacaxi (Jarra 1L) ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Suco de Maracujá (Jarra 1L)">
+                    <div>
+                        <h3 class="item-name">Maracujá</h3>
+                        <span class="item-price">R$ 20,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Suco de Maracujá (Jarra 1L)', 20.00, this)" aria-label="Adicionar Suco de Maracujá (Jarra 1L) ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+                <p class="subgroup-title">Cervejas — latinhas</p>
+                <div class="items-list">
+                <article class="item-row drink-row" data-produto="Skol Latinha">
+                    <div>
+                        <h3 class="item-name">Skol</h3>
+                        <span class="item-price">R$ 4,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Skol Latinha', 4.00, this)" aria-label="Adicionar Skol Latinha ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Brahma Latinha">
+                    <div>
+                        <h3 class="item-name">Brahma</h3>
+                        <span class="item-price">R$ 4,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Brahma Latinha', 4.00, this)" aria-label="Adicionar Brahma Latinha ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Original Latinha">
+                    <div>
+                        <h3 class="item-name">Original</h3>
+                        <span class="item-price">R$ 5,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Original Latinha', 5.00, this)" aria-label="Adicionar Original Latinha ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+                <p class="subgroup-title">Cervejas — garrafas 600ml</p>
+                <div class="items-list">
+                <article class="item-row drink-row" data-produto="Skol Garrafa 600ml">
+                    <div>
+                        <h3 class="item-name">Skol</h3>
+                        <span class="item-price">R$ 10,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Skol Garrafa 600ml', 10.00, this)" aria-label="Adicionar Skol Garrafa 600ml ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Brahma Garrafa 600ml">
+                    <div>
+                        <h3 class="item-name">Brahma</h3>
+                        <span class="item-price">R$ 10,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Brahma Garrafa 600ml', 10.00, this)" aria-label="Adicionar Brahma Garrafa 600ml ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Original Garrafa 600ml">
+                    <div>
+                        <h3 class="item-name">Original</h3>
+                        <span class="item-price">R$ 12,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Original Garrafa 600ml', 12.00, this)" aria-label="Adicionar Original Garrafa 600ml ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                <article class="item-row drink-row" data-produto="Heineken Garrafa 600ml">
+                    <div>
+                        <h3 class="item-name">Heineken</h3>
+                        <span class="item-price">R$ 15,00</span>
+                    </div>
+                    <div class="add-wrap">
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Heineken Garrafa 600ml', 15.00, this)" aria-label="Adicionar Heineken Garrafa 600ml ao pedido"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                        <span class="item-qty" hidden aria-hidden="true">0</span>
+                    </div>
+                </article>
+                </div>
+            </div>
+        </section>
+
+    <section id="onde-estamos" class="visit">
+        <div class="wrap visit-grid">
+            <div>
+                <h2 class="cat-title">Onde estamos</h2>
+                <dl class="visit-list">
+                    <div><dt>Endereço</dt><dd>Galeria V3</dd></div>
+                    <div><dt>Telefone</dt><dd><a href="tel:+5566996564976">(66) 99656-4976</a></dd></div>
+                    <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/mega_lanches2022" target="_blank" rel="noopener">@mega_lanches2022</a></dd></div>
+                </dl>
+            </div>
+            <div class="map-frame">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3798.181788370098!2d-53.28613192476833!3d-17.830111076368837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x937d020ca42aa631%3A0xc99743881afb89b2!2sMEGA%20LANCHES!5e0!3m2!1spt-BR!2sbr!4v1789067507789!5m2!1spt-BR!2sbr" title="Mapa: localização do Mega Lanches" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="wrap footer-row">
+            <span class="footer-brand">MEGA LANCHES</span>
+            <a class="footer-top" href="#topo">Voltar ao topo</a>
+        </div>
+    </footer>
+
+    <!-- Barra flutuante do pedido -->
+    <div id="floatingCartBar" class="floating-cart-bar">
+        <div class="floating-cart-info">
+            <span id="floatingCartCount" class="floating-cart-count">0 itens</span>
+            <span id="floatingCartTotal" class="floating-cart-total">R$ 0,00</span>
+        </div>
+        <button type="button" class="floating-cart-btn" onclick="abrirCarrinho()"><svg class="icon"><use href="#icon-cart"/></svg>Ver pedido</button>
+    </div>
+
+    <!-- Carrinho: bottom sheet (mobile) / drawer (desktop) -->
+    <div id="carrinhoOverlay" class="sheet-overlay" onclick="fecharCarrinho()"></div>
+
+    <aside id="carrinho-secao" class="cart-sheet is-empty" role="dialog" aria-modal="true" aria-labelledby="cartTitle" tabindex="-1">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <header class="sheet-head">
+            <div>
+                <h2 id="cartTitle" class="display sheet-title">Seu pedido</h2>
+                <span id="cartCountLabel" class="sheet-count">Nenhum item</span>
+            </div>
+            <button type="button" class="sheet-close" onclick="fecharCarrinho()" aria-label="Fechar pedido"><svg class="icon"><use href="#icon-close"/></svg></button>
+        </header>
+
+        <div class="sheet-body">
+            <ul id="lista" class="cart-list">
+                <li class="cart-empty">
+                    <p class="cart-empty-title">Seu pedido está vazio</p>
+                    <p class="cart-empty-text">Escolha um lanche no cardápio e ele aparece aqui.</p>
+                    <button type="button" class="btn btn-ghost" onclick="fecharCarrinho()">Ver cardápio</button>
+                </li>
+            </ul>
+
+            <div class="customer-data">
+                <div class="field-group">
+                    <label class="field-label" for="nomeCliente">Seu nome</label>
+                    <input type="text" id="nomeCliente" placeholder="Como podemos te chamar?" class="input-order" autocomplete="name">
+                </div>
+
+                <p class="field-label" id="rotuloModalidade">Como deseja receber?</p>
+                <div class="order-mode-tabs" role="group" aria-labelledby="rotuloModalidade">
+                    <button type="button" id="tabEntrega" class="order-mode-tab active" aria-pressed="true" onclick="selecionarModalidade('entrega')">Entrega</button>
+                    <button type="button" id="tabRetirada" class="order-mode-tab" aria-pressed="false" onclick="selecionarModalidade('retirada')">Receber na mesa</button>
+                </div>
+
+                <h3 id="tituloModalidade" class="display mode-title">Entrega</h3>
+
+                <div id="camposEntrega" class="order-mode-fields">
+                    <input type="text" id="ruaCliente" placeholder="Rua / Avenida" class="input-order" autocomplete="address-line1" aria-label="Rua ou avenida">
+                    <input type="text" id="numeroCliente" placeholder="Número" class="input-order" autocomplete="off" aria-label="Número">
+                    <input type="text" id="bairroCliente" placeholder="Bairro" class="input-order" autocomplete="address-level3" aria-label="Bairro">
+                    <input type="text" id="complementoCliente" placeholder="Complemento (opcional)" class="input-order" autocomplete="address-line2" aria-label="Complemento">
+                </div>
+
+                <div id="camposRetirada" class="order-mode-fields" hidden>
+                    <input type="text" id="mesaCliente" placeholder="Número da mesa" class="input-order" inputmode="numeric" autocomplete="off" aria-label="Número da mesa">
+                    <p class="pickup-info">Informe o número da mesa para o pedido ser entregue certinho.</p>
+                </div>
+
+                <div class="field-group" style="margin-top:26px;">
+                    <label class="field-label" for="formaPagamento">Forma de pagamento</label>
+                    <select id="formaPagamento" class="input-order">
+                        <option value="Pix">PIX</option>
+                        <option value="Cartão">Cartão</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <footer class="sheet-foot">
+            <div class="total-row">
+                <span class="total-label">Total do pedido</span>
+                <span id="total" class="total-text">R$ 0,00</span>
+            </div>
+            <div class="cart-actions">
+                <button type="button" class="btn btn-order" onclick="enviarWhats()">Finalizar pedido no WhatsApp</button>
+                <button type="button" class="btn btn-keep-buying" onclick="fecharCarrinho()">Continuar escolhendo</button>
+            </div>
+        </footer>
+    </aside>
+
+    <!-- Configurador de Hot Dog -->
+    <div id="modalConfigurador" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content" tabindex="-1">
+            <div class="modal-handle" aria-hidden="true"></div>
+            <button type="button" class="close-modal" onclick="fecharConfigurador()" aria-label="Fechar"><svg class="icon"><use href="#icon-close"/></svg></button>
+            <h2 id="modalTitle">Montar Item</h2>
+            <p id="modalSubtitle" class="modal-rules"></p>
+            <div class="modal-scroll-area">
+                <div id="opcoesDinamicas"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-breakdown">
+                    <span id="modalBreakdownLine">Base: R$ 0,00</span>
+                    <span class="modal-breakdown-total">Total: <span id="modalSubtotal">R$ 0,00</span></span>
+                </div>
+                <button id="btnConfirmarHotDog" class="btn-confirm-add" onclick="confirmarAdicaoHotDog()">Pedir sem adicionais</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+
+if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+}
+
+window.addEventListener("load", function () {
+    /* volta ao topo no reload, mas respeita links diretos como /#hotdogs */
+    if (!location.hash) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+});
+
+const ADICIONAIS_HOTDOG = [
+    { nome: "Salsicha", preco: 3.00 },
+    { nome: "Hambúrguer", preco: 5.00 },
+    { nome: "Muçarela", preco: 3.00 },
+    { nome: "Bacon", preco: 5.00 },
+    { nome: "Frango", preco: 5.00 },
+    { nome: "Filé Mignon", preco: 5.00 },
+    { nome: "Ovo", preco: 3.00 },
+    { nome: "Cheddar", preco: 3.00 },
+    { nome: "Catupiry", preco: 3.00 }
+];
+
+let carrinho = [];
+let total = 0;
+let proximoIdItem = 1;
+let modalidadePedido = 'entrega';
+let hotDogAtual = { nome: "", precoBase: 0, subtotal: 0 };
+
+function formatarPreco(valor) {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function escaparHtml(texto) {
+    return String(texto).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function quantidadeTotal() {
+    return carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+}
+
+/* ---------- Feedback ---------- */
+
+let temporizadorAviso = null;
+
+function avisar(mensagem, campo) {
+    const toast = document.getElementById("toast");
+    toast.textContent = mensagem;
+    toast.classList.add("show");
+    clearTimeout(temporizadorAviso);
+    temporizadorAviso = setTimeout(() => toast.classList.remove("show"), 3200);
+
+    if (campo) {
+        campo.classList.add("invalid");
+        campo.focus();
+        campo.addEventListener("input", () => campo.classList.remove("invalid"), { once: true });
+    }
+}
+
+/* ---------- Itens simples (lanches, combos, porções, jantinhas, bebidas) ---------- */
+
+/* Soma na linha existente quando nome e adicionais são idênticos; senão cria linha nova */
+function adicionarItem(nome, descricao, preco) {
+    const existente = carrinho.find(i => i.nomeBase === nome && i.descricao === descricao);
+    if (existente) {
+        existente.quantidade++;
+    } else {
+        carrinho.push({
+            id: proximoIdItem++,
+            nomeBase: nome,
+            descricao,
+            precoUnitario: preco,
+            quantidade: 1
+        });
+    }
+    atualizarCarrinho();
+}
+
+function adicionarAoCarrinho(nome, preco, botao) {
+    adicionarItem(nome, "", preco);
+
+    if (botao) {
+        /* guarda o conteúdo original uma única vez: toques rápidos não deixam o ícone preso */
+        if (!botao.dataset.original) botao.dataset.original = botao.innerHTML;
+        botao.innerHTML = '<svg class="icon"><use href="#icon-check"/></svg>';
+        botao.classList.add("added");
+        clearTimeout(botao._timer);
+        botao._timer = setTimeout(() => {
+            botao.innerHTML = botao.dataset.original;
+            botao.classList.remove("added");
+        }, 900);
+    }
+}
+
+/* ---------- Bloqueio de rolagem do fundo (modal e carrinho) ---------- */
+
+let scrollYAntesDoModal = 0;
+let focoAntesDoDialogo = null;
+
+/* Com um diálogo aberto, o resto da página não recebe foco nem leitor de tela (aria-modal não faz isso sozinho) */
+function definirFundoInerte(inerte) {
+    document.querySelectorAll("body > header, body > nav, body > main, body > footer, #floatingCartBar")
+        .forEach(el => { el.inert = inerte; });
+}
+
+function travarScrollFundo() {
+    /* chamada dupla sobrescreveria a posição salva com 0 (o body já está fixo) */
+    if (document.body.classList.contains("modal-open")) return;
+    focoAntesDoDialogo = document.activeElement;
+    scrollYAntesDoModal = window.scrollY;
+    document.body.style.top = `-${scrollYAntesDoModal}px`;
+    document.body.classList.add("modal-open");
+    definirFundoInerte(true);
+}
+
+function destravarScrollFundo() {
+    if (!document.body.classList.contains("modal-open")) return;
+    document.body.classList.remove("modal-open");
+    document.body.style.top = "";
+    definirFundoInerte(false);
+    window.scrollTo({ top: scrollYAntesDoModal, left: 0, behavior: "instant" });
+    if (focoAntesDoDialogo && typeof focoAntesDoDialogo.focus === "function") {
+        focoAntesDoDialogo.focus({ preventScroll: true });
+    }
+    focoAntesDoDialogo = null;
+}
+
+/* ---------- Configurador de Hot Dog ---------- */
+
+function abrirConfiguradorHotDog(nome, preco) {
+    hotDogAtual = { nome, precoBase: preco, subtotal: preco };
+
+    document.getElementById("modalTitle").textContent = `Montar ${nome}`;
+    document.getElementById("modalSubtitle").textContent = "Escolha os adicionais que quiser. Cada um soma no valor final.";
+
+    let html = '<div class="option-group"><h4>Adicionais</h4>';
+    ADICIONAIS_HOTDOG.forEach(a => {
+        html += `<label class="checkbox-label"><span>${a.nome}</span><span class="opt-price">+ ${formatarPreco(a.preco)}<span class="check-indicator"><input type="checkbox" name="pagoHotDog" data-preco="${a.preco}" value="${a.nome}" onchange="atualizarSubtotalHotDog()"><span class="check-box" aria-hidden="true"></span></span></span></label>`;
+    });
+    html += '</div>';
+
+    document.getElementById("opcoesDinamicas").innerHTML = html;
+    atualizarSubtotalHotDog();
+    document.getElementById("modalConfigurador").style.display = "flex";
+    travarScrollFundo();
+    document.querySelector("#modalConfigurador .modal-content").focus({ preventScroll: true });
+}
+
+function fecharConfigurador() {
+    document.getElementById("modalConfigurador").style.display = "none";
+    destravarScrollFundo();
+}
+
+function atualizarSubtotalHotDog() {
+    let extra = 0;
+    let qtdSelecionados = 0;
+    document.querySelectorAll('input[name="pagoHotDog"]:checked').forEach(input => {
+        extra += parseFloat(input.dataset.preco);
+        qtdSelecionados++;
+    });
+    hotDogAtual.subtotal = hotDogAtual.precoBase + extra;
+
+    document.getElementById("modalBreakdownLine").textContent =
+        qtdSelecionados > 0
+            ? `Base: ${formatarPreco(hotDogAtual.precoBase)} + Adicionais: ${formatarPreco(extra)}`
+            : `Base: ${formatarPreco(hotDogAtual.precoBase)}`;
+    document.getElementById("modalSubtotal").textContent = formatarPreco(hotDogAtual.subtotal);
+
+    const btn = document.getElementById("btnConfirmarHotDog");
+    btn.textContent = qtdSelecionados > 0 ? "Pedir com adicionais" : "Pedir sem adicionais";
+}
+
+function confirmarAdicaoHotDog() {
+    const extras = [];
+    document.querySelectorAll('input[name="pagoHotDog"]:checked').forEach(input => {
+        extras.push(`${input.value} (+ ${formatarPreco(parseFloat(input.dataset.preco))})`);
+    });
+
+    adicionarItem(
+        hotDogAtual.nome,
+        extras.length > 0 ? `Adicionais: ${extras.join(", ")}` : "",
+        hotDogAtual.subtotal
+    );
+
+    fecharConfigurador();
+    abrirCarrinho();
+}
+
+/* ---------- Carrinho ---------- */
+
+function abrirCarrinho() {
+    const painel = document.getElementById("carrinho-secao");
+    if (painel.classList.contains("open")) return;
+
+    travarScrollFundo();
+    document.getElementById("carrinhoOverlay").classList.add("open");
+    painel.classList.add("open");
+    setTimeout(() => painel.focus({ preventScroll: true }), 60);
+}
+
+function fecharCarrinho() {
+    const painel = document.getElementById("carrinho-secao");
+    if (!painel.classList.contains("open")) return;
+
+    painel.classList.remove("open");
+    document.getElementById("carrinhoOverlay").classList.remove("open");
+    destravarScrollFundo();
+}
+
+function recalcularTotal() {
+    total = carrinho.reduce((acc, item) => acc + (item.precoUnitario * item.quantidade), 0);
+}
+
+function atualizarCarrinho() {
+    recalcularTotal();
+
+    const lista = document.getElementById("lista");
+    const painel = document.getElementById("carrinho-secao");
+    const qtdTotal = quantidadeTotal();
+    lista.innerHTML = "";
+
+    painel.classList.toggle("is-empty", carrinho.length === 0);
+
+    if (carrinho.length === 0) {
+        lista.innerHTML = `
+            <li class="cart-empty">
+                <p class="cart-empty-title">Seu pedido está vazio</p>
+                <p class="cart-empty-text">Escolha um lanche no cardápio e ele aparece aqui.</p>
+                <button type="button" class="btn btn-ghost" onclick="fecharCarrinho()">Ver cardápio</button>
+            </li>`;
+    } else {
+        carrinho.forEach(item => {
+            const li = document.createElement("li");
+            li.className = "cart-item";
+            const precoUnitFormatado = formatarPreco(item.precoUnitario);
+            const precoItemFormatado = formatarPreco(item.precoUnitario * item.quantidade);
+
+            const nomeSeguro = escaparHtml(item.nomeBase);
+
+            li.innerHTML = `
+                <div>
+                    <div class="ci-name">${nomeSeguro}</div>
+                    ${item.descricao ? `<div class="ci-details">${escaparHtml(item.descricao)}</div>` : ""}
+                </div>
+                <div class="ci-price">
+                    <span class="ci-total">${precoItemFormatado}</span>
+                    ${item.quantidade > 1 ? `<span class="ci-unit">${precoUnitFormatado} cada</span>` : ""}
+                </div>
+                <div class="ci-actions">
+                    <div class="qty-control">
+                        <button type="button" class="btn-qty" data-acao="menos" data-id="${item.id}" onclick="diminuirQuantidade(${item.id})" aria-label="Diminuir quantidade de ${nomeSeguro}"><svg class="icon"><use href="#icon-minus"/></svg></button>
+                        <span class="qty-value">${item.quantidade}</span>
+                        <button type="button" class="btn-qty" data-acao="mais" data-id="${item.id}" onclick="aumentarQuantidade(${item.id})" aria-label="Aumentar quantidade de ${nomeSeguro}"><svg class="icon"><use href="#icon-plus"/></svg></button>
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removerItemDoCarrinho(${item.id})" aria-label="Remover ${nomeSeguro}">Remover</button>
+                </div>
+            `;
+            lista.appendChild(li);
+        });
+    }
+
+    document.getElementById("total").textContent = formatarPreco(total);
+    document.getElementById("cartCountLabel").textContent =
+        qtdTotal === 0 ? "Nenhum item" : (qtdTotal === 1 ? "1 item" : `${qtdTotal} itens`);
+
+    atualizarBarraFlutuante();
+    atualizarMarcadores();
+}
+
+/* Mostra no cardápio quantas unidades de cada produto já estão no pedido */
+function atualizarMarcadores() {
+    const contagem = {};
+    carrinho.forEach(i => { contagem[i.nomeBase] = (contagem[i.nomeBase] || 0) + i.quantidade; });
+
+    document.querySelectorAll("[data-produto]").forEach(el => {
+        const qtd = contagem[el.dataset.produto] || 0;
+        const marcador = el.querySelector(".item-qty");
+        if (marcador) {
+            marcador.textContent = qtd;
+            marcador.hidden = qtd === 0;
+        }
+    });
+}
+
+function atualizarBarraFlutuante() {
+    const barra = document.getElementById("floatingCartBar");
+    const chip = document.getElementById("navCartCount");
+    const qtdTotal = quantidadeTotal();
+
+    chip.textContent = qtdTotal;
+    chip.hidden = qtdTotal === 0;
+
+    if (qtdTotal > 0) {
+        document.getElementById("floatingCartCount").textContent = qtdTotal === 1 ? "1 item" : `${qtdTotal} itens`;
+        document.getElementById("floatingCartTotal").textContent = formatarPreco(total);
+        barra.classList.add("show");
+        document.body.classList.add("has-floating-bar");
+
+        barra.classList.remove("bump");
+        void barra.offsetWidth;
+        barra.classList.add("bump");
+    } else {
+        barra.classList.remove("show");
+        document.body.classList.remove("has-floating-bar");
+    }
+}
+
+/* A lista é redesenhada a cada mudança; devolve o foco ao botão equivalente para quem usa teclado */
+function devolverFocoAoBotao(id, acao) {
+    const botao = document.querySelector(`#lista [data-acao="${acao}"][data-id="${id}"]`);
+    if (botao) botao.focus({ preventScroll: true });
+}
+
+function aumentarQuantidade(id) {
+    const item = carrinho.find(i => i.id === id);
+    if (!item) return;
+    item.quantidade++;
+    atualizarCarrinho();
+    devolverFocoAoBotao(id, "mais");
+}
+
+function diminuirQuantidade(id) {
+    const item = carrinho.find(i => i.id === id);
+    if (!item) return;
+    if (item.quantidade > 1) {
+        item.quantidade--;
+    } else {
+        carrinho = carrinho.filter(i => i.id !== id);
+    }
+    atualizarCarrinho();
+    devolverFocoAoBotao(id, "menos");
+}
+
+function removerItemDoCarrinho(id) {
+    carrinho = carrinho.filter(item => item.id !== id);
+    atualizarCarrinho();
+}
+
+/* ---------- Entrega / Retirada ---------- */
+
+function selecionarModalidade(modo) {
+    modalidadePedido = modo;
+    const naMesa = modo === 'retirada';
+
+    const tabEntrega = document.getElementById("tabEntrega");
+    const tabRetirada = document.getElementById("tabRetirada");
+
+    tabEntrega.classList.toggle('active', !naMesa);
+    tabEntrega.setAttribute('aria-pressed', String(!naMesa));
+    tabRetirada.classList.toggle('active', naMesa);
+    tabRetirada.setAttribute('aria-pressed', String(naMesa));
+
+    document.getElementById("camposEntrega").hidden = naMesa;
+    document.getElementById("camposRetirada").hidden = !naMesa;
+    document.getElementById("tituloModalidade").textContent = naMesa ? 'Receber na mesa' : 'Entrega';
+}
+
+/* ---------- Finalização via WhatsApp ---------- */
+
+function formatarItensPedido(itens) {
+    let texto = "";
+    itens.forEach(item => {
+        const subtotalItem = item.precoUnitario * item.quantidade;
+        texto += `▶ *${item.quantidade} UN - ${item.nomeBase}* (Subtotal: ${formatarPreco(subtotalItem)})\n`;
+        if (item.descricao) {
+            texto += `  └ ${item.descricao}\n`;
+        }
+        texto += "\n";
+    });
+    return texto;
+}
+
+function enviarWhats() {
+    if (carrinho.length === 0) {
+        avisar("O seu pedido está vazio! Adicione um item para prosseguir.");
+        return;
+    }
+
+    const campoNome = document.getElementById("nomeCliente");
+    const nome = campoNome?.value.trim() || "";
+    const pagamento = document.getElementById("formaPagamento").value;
+
+    if (!nome) { avisar("Informe seu nome.", campoNome); return; }
+
+    let textoMensagem = "*🍔 MEGA LANCHES - NOVO PEDIDO 🍔*\n\n";
+    textoMensagem += "Olá! Gostaria de fazer um pedido:\n\n";
+
+    textoMensagem += "*👤 Informações do Cliente*\n";
+    textoMensagem += `• Nome: ${nome}\n`;
+
+    if (modalidadePedido === 'retirada') {
+        const campoMesa = document.getElementById("mesaCliente");
+        const mesa = campoMesa.value.trim();
+        if (!mesa) { avisar("Informe o número da mesa.", campoMesa); return; }
+
+        textoMensagem += `• Modalidade: 🍽️ Receber na mesa\n`;
+        textoMensagem += `• Mesa: ${mesa}\n\n`;
+    } else {
+        const campoRua = document.getElementById("ruaCliente");
+        const campoNumero = document.getElementById("numeroCliente");
+        const campoBairro = document.getElementById("bairroCliente");
+        const rua = campoRua?.value.trim() || "";
+        const numero = campoNumero?.value.trim() || "";
+        const bairro = campoBairro?.value.trim() || "";
+        const complemento = document.getElementById("complementoCliente")?.value.trim() || "";
+
+        if (!rua || !numero || !bairro) {
+            avisar("Preencha o endereço completo.", !rua ? campoRua : (!numero ? campoNumero : campoBairro));
+            return;
+        }
+
+        textoMensagem += `• Modalidade: 🛵 Delivery (Entrega)\n\n`;
+        textoMensagem += "*📍 Endereço de Entrega*\n";
+        textoMensagem += `• Rua: ${rua}, Nº ${numero}\n`;
+        textoMensagem += `• Bairro: ${bairro}\n`;
+        if (complemento) { textoMensagem += `• Complemento: ${complemento}\n`; }
+        textoMensagem += "\n";
+    }
+
+    textoMensagem += "*🛒 Detalhes do Pedido*\n";
+    textoMensagem += formatarItensPedido(carrinho);
+
+    textoMensagem += `• Total a Pagar: *${formatarPreco(total)}*\n`;
+    textoMensagem += `• Forma de Pagamento: ${pagamento}\n\n`;
+
+    const numeroAtendimento = "5566996564976";
+    const url = `https://wa.me/${numeroAtendimento}?text=${encodeURIComponent(textoMensagem)}`;
+    window.open(url, '_blank', 'noopener');
+}
+
+/* ---------- Fechar o configurador clicando fora dele (como já ocorre no carrinho) ---------- */
+
+document.getElementById("modalConfigurador").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) fecharConfigurador();
+});
+
+/* ---------- Teclado: Esc fecha o que estiver aberto ---------- */
+
+document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (document.getElementById("modalConfigurador").style.display === "flex") {
+        fecharConfigurador();
+    } else if (document.getElementById("carrinho-secao").classList.contains("open")) {
+        fecharCarrinho();
+    }
+});
+
+/* ---------- Navegação ativa (sticky) ---------- */
+
+(function () {
+    const navScroll = document.querySelector('.quick-nav-scroll');
+    const navLinks = Array.from(document.querySelectorAll('.quick-nav-scroll a'));
+    const sections = navLinks
+        .map(link => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+    /* seções sem aba: ao chegar nelas, nenhuma categoria fica marcada */
+    ['hero', 'onde-estamos'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) sections.push(el);
+    });
+
+    if (!('IntersectionObserver' in window) || sections.length === 0) return;
+
+    const setActive = (id) => {
+        navLinks.forEach(link => {
+            const ativo = link.getAttribute('href') === `#${id}`;
+            link.classList.toggle('active', ativo);
+            if (ativo && navScroll.scrollWidth > navScroll.clientWidth) {
+                const alvo = link.offsetLeft - (navScroll.clientWidth - link.offsetWidth) / 2;
+                navScroll.scrollTo({ left: alvo, behavior: 'smooth' });
+            }
+        });
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setActive(entry.target.id);
+            }
+        });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+    sections.forEach(section => observer.observe(section));
+})();
+
+/* ---------- Imagens: fade-in ao carregar ---------- */
+
+(function () {
+    document.querySelectorAll('img.fade').forEach(img => {
+        const ok = () => img.classList.add('is-loaded');
+        if (img.complete && img.naturalWidth > 0) {
+            ok();
+        } else {
+            img.addEventListener('load', ok, { once: true });
+        }
+    });
+})();
+</script>
+</body>
+</html>
